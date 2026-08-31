@@ -54,3 +54,7 @@ dsh построен на [Cordis](https://github.com/cordiverse/cordis): веб
 ## Лицензия
 
 [MIT](LICENSE). Основано на API плагина локали DeepSeek Harness (`@deepseek-ai/dsh-client-locale`, MIT, © 2026 DeepSeek). Переводы и интеграция — автор репозитория.
+## Совместимость
+
+- DeepSeek Harness 0.1.0-rc.8 ~ 0.1.1-rc.2 (проверено на 0.1.1-rc.2)
+- Интерфейс плагина (если установлен) — dsh-better-sidebar — следует языку DSH; его словарь в этот плагин пока не входит.
