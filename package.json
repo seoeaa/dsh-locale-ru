@@ -18,5 +18,22 @@
       "immediately": true
     }
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seoeaa/dsh-locale-ru.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seoeaa/dsh-locale-ru/issues"
+  },
+  "homepage": "https://github.com/seoeaa/dsh-locale-ru#readme",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "plugin",
+    "locale",
+    "russian",
+    "i18n",
+    "translation"
+  ]
 }
