@@ -1,0 +1,4 @@
+# dsh bundle layer: mount the Russian locale plugin.
+- insert:
+    - id: dsh-locale-ru
+      name: '@dsh-local/locale-ru'

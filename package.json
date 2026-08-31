@@ -1,0 +1,22 @@
+{
+  "name": "@dsh-local/locale-ru",
+  "version": "0.1.0",
+  "description": "Russian interface for DeepSeek Harness (client locale plugin)",
+  "type": "module",
+  "exports": {
+    ".": "./dsh/index.js",
+    "./client": "./dsh/client.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [],
+      "platform": "web",
+      "immediately": true
+    }
+  },
+  "license": "MIT"
+}
