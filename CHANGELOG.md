@@ -1,8 +1,25 @@
 # Changelog
 
+## [0.2.0] - 2026-09-20
+
+- **Переход на публичный API локали dsh**: `ctx.locale.addLanguage({ id: 'ru', label: 'Русский', fallback: 'en' })`
+  и `ctx.locale.register(namespace, 'ru', {...})` вместо правки внутренностей `LocaleRuntime`.
+  Прежняя версия патчила реестр и перестала работать на dsh ≥ 0.1.3.
+- **Совместимость с dsh 0.1.5-rc.x** (проверено на 0.1.5-rc.1 / 0.1.5-rc.2, работает начиная с 0.1.2-rc.1).
+- **Выбор языка теперь сохраняет сам dsh** — `locale.preference` в `~/.dsh/settings.yaml` вместо
+  `localStorage`; выбор из версий 0.1.x переносится в настройки автоматически.
+- **Перевод обновлён под текущий интерфейс**: 42 namespace и 1257 строк (было 26 и ~690):
+  добавлены чат и траектория, панели (файлы, PDF, изображения, документы), фоновые задачи,
+  расписание, разрешения, список плагинов, пресеты агентов, «Открыть в приложении», отзывы,
+  уведомление о внутреннем тестировании dsh.
+- Удалены устаревшие namespace (`agent-presets`, `permission`) и ключи, которых больше нет в dsh.
+- Добавлены проверки: `npm run verify` (плагин на настоящем сервисе локали dsh, 20 проверок) и
+  `npm run check` (полнота и актуальность словарей по установленному dsh).
+- Уточнены `README.md`, `README.en.md`, `docs/how-it-works.md`, `docs/development.md`.
+
 ## [0.1.0] - 2026-08-31
 
-- Initial release: Russian interface for DeepSeek Harness.
-- 26 namespaces, ~690 strings translated (menus, settings, chat, models, plugins, agent presets, subagents).
-- Automatic activation when the browser prefers Russian; manual switch in Settings → General → Language.
-- Choice persisted in browser localStorage (host settings schema accepts only zh/en).
+- Первый выпуск: русский интерфейс DeepSeek Harness (dsh).
+- 26 namespace, ~690 строк (меню, настройки, чат, модели, плагины, пресеты агентов, субагенты).
+- Автовключение, если браузер предпочитает русский; переключатель в Settings → General → Language.
+- Выбор хранился в `localStorage` браузера (схема настроек хоста не принимала `ru`).

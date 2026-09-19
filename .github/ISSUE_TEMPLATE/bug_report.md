@@ -12,3 +12,9 @@ labels: i18n, bug
 **Expected Russian text:**
 
 **dsh version:** (dsh --version)
+
+**Coverage check output** (helps a lot, run in the plugin directory):
+
+```
+npm run check
+```

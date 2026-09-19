@@ -1,6 +1,6 @@
 {
   "name": "@dsh-local/locale-ru",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Russian interface for DeepSeek Harness (client locale plugin)",
   "type": "module",
   "exports": {
@@ -17,6 +17,11 @@
       "platform": "web",
       "immediately": true
     }
+  },
+  "scripts": {
+    "verify": "node scripts/verify.mjs",
+    "check": "node scripts/check-coverage.mjs",
+    "test": "node scripts/verify.mjs && node scripts/check-coverage.mjs"
   },
   "license": "MIT",
   "repository": {
