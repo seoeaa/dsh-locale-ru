@@ -1,6 +1,6 @@
 {
   "name": "@dsh-local/locale-ru",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Russian interface for DeepSeek Harness (client locale plugin)",
   "type": "module",
   "exports": {

@@ -51,9 +51,13 @@ node scripts/check-coverage.mjs /path/to/node_modules/@deepseek-ai
 ```bash
 git clone https://github.com/seoeaa/dsh-locale-ru.git ~/.dsh/profiles/web/plugins/dsh-locale-ru
 cd ~/.dsh/profiles/web
-dsh plugin --profile web add file:./plugins/dsh-locale-ru
+dsh plugin --profile web add link:./plugins/dsh-locale-ru
 # restart dsh web and hard-refresh the browser (Ctrl+Shift+R)
 ```
+
+`link:` keeps `node_modules/@dsh-local/locale-ru` a symlink to the clone, so edits take effect on
+the next client bundle build. `file:` copies the plugin instead, and the copy keeps serving the old
+code until `pnpm add` runs again — a silent way to debug a "fixed but not visible" plugin.
 
 ## Releasing
 
@@ -64,6 +68,12 @@ dsh plugin --profile web add file:./plugins/dsh-locale-ru
 
 ```bash
 cd ~/.dsh/profiles/web/plugins/dsh-locale-ru && git pull
-cd ~/.dsh/profiles/web && pnpm add file:./plugins/dsh-locale-ru
 # restart dsh web
+```
+
+The server rebuilds the client bundle when plugin files change (the asset revision in the page
+changes too), so a restart plus a page reload is enough:
+
+```bash
+curl -s "http://127.0.0.1:3080/?token=..." | grep -o 'locale-ru/client.js'   # плагин в бандле
 ```

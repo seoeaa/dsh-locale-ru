@@ -28,12 +28,23 @@ A custom locale plugin that adds a full **Russian locale** to the
 ```bash
 git clone https://github.com/seoeaa/dsh-locale-ru.git ~/.dsh/profiles/web/plugins/dsh-locale-ru
 cd ~/.dsh/profiles/web
-dsh plugin --profile web add file:./plugins/dsh-locale-ru
+dsh plugin --profile web add link:./plugins/dsh-locale-ru
 # restart dsh web and reload the page (Ctrl+R)
 ```
 
 After the restart the UI turns Russian automatically when the browser prefers it; otherwise pick
 **Settings → General → Language → Русский**.
+
+`link:` matters: `add file:...` copies the plugin into the profile's `node_modules`, so a later
+`git pull` in the clone has no effect on the running harness. With `link:` the clone itself is the
+package — `git pull` plus a restart is all an update needs. Installs created with `file:` can be
+switched once with:
+
+```bash
+cd ~/.dsh/profiles/web
+rm -rf node_modules/@dsh-local/locale-ru
+dsh plugin --profile web add link:./plugins/dsh-locale-ru
+```
 
 ## How it works
 

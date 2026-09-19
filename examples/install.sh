@@ -15,5 +15,7 @@ else
 fi
 
 cd "$HOME/.dsh/profiles/$PROFILE"
-dsh plugin --profile "$PROFILE" add "file:./plugins/dsh-locale-ru"
+# link: — профиль использует сам клон; file: скопировал бы файлы в node_modules
+# и перестал бы видеть обновления после git pull.
+dsh plugin --profile "$PROFILE" add "link:./plugins/dsh-locale-ru"
 echo "Done. Restart dsh web and hard-refresh the browser (Ctrl+Shift+R)."

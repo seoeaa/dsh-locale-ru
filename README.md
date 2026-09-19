@@ -32,9 +32,12 @@
 # 1. Клонировать плагин в папку плагинов профиля
 git clone https://github.com/seoeaa/dsh-locale-ru.git ~/.dsh/profiles/web/plugins/dsh-locale-ru
 
-# 2. Зарегистрировать плагин (добавит его в зависимости и бандлы профиля)
+# 2. Зарегистрировать плагин (добавит его в зависимости и бандлы профиля).
+#    Именно link: — тогда профиль использует сам клон, а не его копию:
+#    `dsh plugin add file:...` копирует файлы в node_modules, и после
+#    `git pull` харнесс продолжает отдавать старую копию.
 cd ~/.dsh/profiles/web
-dsh plugin --profile web add file:./plugins/dsh-locale-ru
+dsh plugin --profile web add link:./plugins/dsh-locale-ru
 
 # 3. Перезапустить dsh web и обновить страницу (Ctrl+R)
 ```
@@ -48,8 +51,16 @@ dsh plugin --profile web add file:./plugins/dsh-locale-ru
 
 ```bash
 cd ~/.dsh/profiles/web/plugins/dsh-locale-ru && git pull
+# затем перезапустить dsh web (клиентский бандл пересобирается сам)
+```
+
+Если плагин ставился старой командой `add file:...`, в `node_modules` профиля лежит копия,
+и обновления в неё не попадают. Переведите установку на симлинк один раз:
+
+```bash
 cd ~/.dsh/profiles/web
-pnpm add "file:./plugins/dsh-locale-ru"
+rm -rf node_modules/@dsh-local/locale-ru
+dsh plugin --profile web add link:./plugins/dsh-locale-ru
 # затем перезапустить dsh web
 ```
 
