@@ -34,7 +34,7 @@ const check = (name, ok, detail) => {
 }
 
 /** Поднимает настоящий сервис локали dsh и наш плагин в браузерной песочнице. */
-function boot({ languages, storage = {} }) {
+async function boot({ languages, storage = {} }) {
   const sandbox = createSandbox({ languages, storage })
   const scope = {
     value: undefined,
@@ -58,13 +58,16 @@ function boot({ languages, storage = {} }) {
     // иначе плагин не увидит ctx.locale.
     provide(name, value) { provided[name] = value; ctx[name] = value },
     settingsScope: { bind: () => scope },
+    // alpha.5 uses configForms; retain settingsScope for older runtimes.
+    configForms: { get: () => scope },
     slots: { installLocale() {}, inject() {}, register: () => () => {} },
     remote: {}, logger: console,
     on() {}, emit() {}, off() {}, inject: () => () => {},
   }
 
   const localeSource = fs.readFileSync(path.join(dsh.localePackage, 'lib', 'client.js'), 'utf8')
-  runApply(loadModuleSource(localeSource, sandbox), ctx, sandbox)
+  const localeModule = loadModuleSource(localeSource, sandbox)
+  await (localeModule.exports.apply ?? localeModule.exports.default?.apply)(ctx)
   const plugin = loadModuleSource(fs.readFileSync(clientPath, 'utf8'), sandbox)
   runApply(plugin, ctx, sandbox)
   sandbox.flushTimeouts()
@@ -72,7 +75,7 @@ function boot({ languages, storage = {} }) {
 }
 
 // --- сценарий 1: браузер предпочитает русский ---------------------------------
-const russianBrowser = boot({ languages: ['ru-RU', 'ru', 'en'] })
+const russianBrowser = await boot({ languages: ['ru-RU', 'ru', 'en'] })
 const locale = russianBrowser.provided.locale
 check('dsh provides the locale service', Boolean(locale))
 check('the plugin injects the locale service', (russianBrowser.plugin.exports.inject ?? []).includes('locale'))
@@ -114,11 +117,11 @@ check('switching back to Russian works', locale.getSnapshot().active === 'ru' &&
 check('Russian is stored as well', russianBrowser.scope.value?.preference === 'ru')
 
 // --- сценарий 4: английский браузер и прежний выбор из localStorage -----------
-const englishBrowser = boot({ languages: ['en-US', 'en'] })
+const englishBrowser = await boot({ languages: ['en-US', 'en'] })
 check('an English browser without a stored choice stays English', englishBrowser.provided.locale.getSnapshot().active === 'en')
 check('Russian is still offered there', englishBrowser.provided.locale.getSnapshot().locales.some((item) => item.id === 'ru'))
 
-const legacyBrowser = boot({ languages: ['en-US', 'en'], storage: { 'dsh-locale-ru:pref': 'ru' } })
+const legacyBrowser = await boot({ languages: ['en-US', 'en'], storage: { 'dsh-locale-ru:pref': 'ru' } })
 check('the legacy localStorage choice switches the interface to Russian', legacyBrowser.provided.locale.getSnapshot().active === 'ru')
 check('the legacy choice is moved into the settings', legacyBrowser.scope.value?.preference === 'ru')
 check('the legacy key is cleaned up', !('dsh-locale-ru:pref' in legacyBrowser.sandbox.storage))

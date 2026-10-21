@@ -258,6 +258,10 @@ export function stubContext(onRegister) {
     // Разделяемая область настроек: некоторые плагины (например тема) читают
     // её уже в конструкторе и падают на заглушке-прокси.
     settingsScope: { bind: () => createSettingsScope() },
+    // No live Host connection during dictionary extraction. In alpha.5 the
+    // permission catalog otherwise starts an RPC before registering settings.
+    connection: { generation: { getSnapshot: () => undefined, subscribe: () => () => {} } },
+    get(name) { return this[name] },
     inject: () => () => {},
     provide() {}, emit() {}, on() {}, off() {}, once() {},
   }

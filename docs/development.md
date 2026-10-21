@@ -20,6 +20,14 @@ dsh-locale-ru/
 Edit the `RU` object in `dsh/client.js`. Keys must match the English dictionaries of the owning
 dsh UI package: the namespace and the key are the lookup contract.
 
+Empty prefixes and whitespace separators are valid only when the English original is also blank.
+Check the English text as well as the key when reusing a translation: equal key names in different
+namespaces can have unrelated meanings. On alpha.5 the verification harness must await locale
+activation and supply `configForms.get`; `settingsScope.bind` remains for older runtimes.
+The dictionary-extraction context must also support `get("connection")` with an absent generation:
+the permission UI otherwise starts an RPC and throws before registering `settings.permission`.
+A passing coverage count alone cannot prove completeness; verify representative screens in a real browser.
+
 Then check the result:
 
 ```bash
@@ -71,8 +79,9 @@ cd ~/.dsh/profiles/web/plugins/dsh-locale-ru && git pull
 # restart dsh web
 ```
 
-The server rebuilds the client bundle when plugin files change (the asset revision in the page
-changes too), so a restart plus a page reload is enough:
+With HMR, alpha.5 rebuilds the client module when linked plugin files change; a page reload is
+enough. Verify the live client, not only the host inventory. If the old module is still served,
+safely restart after active tasks finish:
 
 ```bash
 curl -s "http://127.0.0.1:3080/?token=..." | grep -o 'locale-ru/client.js'   # плагин в бандле

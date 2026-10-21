@@ -5,11 +5,11 @@ A custom locale plugin that adds a full **Russian locale** to the
 
 ## Features
 
-- **Full translation of the dictionary-driven UI**: 42 namespaces, 1257 strings — chat and
+- **Full translation of the dictionary-driven UI**: 60 namespaces, 2750 strings — chat and
   trajectory, settings (models, plugins, permissions, agent presets, appearance), sidebars,
   files, background jobs, schedule, subagents, skills, feedback.
 - **Public locale API only**: the plugin registers a language and dictionaries
-  (`addLanguage` + `register`) without patching dsh internals, so dsh upgrades cannot break it.
+  (`addLanguage` + `register`) without patching dsh internals. Recheck dictionary coverage after dsh upgrades.
 - **Automatic**: activates Russian when the browser prefers it.
 - Manual switch: **Settings → General → Language → Русский**.
 - The choice is **persisted by dsh in `~/.dsh/settings.yaml`** (`locale.preference`) and applies to every browser.
@@ -18,7 +18,7 @@ A custom locale plugin that adds a full **Russian locale** to the
 
 ## Compatibility
 
-- DeepSeek Harness **0.1.2-rc.1 or newer** (verified on 0.1.5-rc.1 / 0.1.5-rc.2 and 0.1.2-rc.1).
+- Current dictionaries verified on DeepSeek Harness **0.2.1-alpha.5**. The public API was previously verified on 0.1.2-rc.1 and 0.1.5-rc.x; current dictionary coverage on older versions is not guaranteed.
 - Requires the `@deepseek-ai/dsh-client-locale` service, shipped with dsh.
 - Third-party plugin UIs (e.g. `dsh-better-sidebar`, `dsh-cron`, `dsh-mcp-panel`) are not included:
   their own dictionaries stay English. They can be added as extra namespaces.
@@ -37,7 +37,7 @@ After the restart the UI turns Russian automatically when the browser prefers it
 
 `link:` matters: `add file:...` copies the plugin into the profile's `node_modules`, so a later
 `git pull` in the clone has no effect on the running harness. With `link:` the clone itself is the
-package — `git pull` plus a restart is all an update needs. Installs created with `file:` can be
+package — `git pull` followed by a page reload applies an update when HMR is available. Otherwise, safely restart after active tasks finish. Installs created with `file:` can be
 switched once with:
 
 ```bash
@@ -60,7 +60,7 @@ exports.apply = function (ctx) {
 }
 ```
 
-This repository does exactly that for 42 UI namespaces: it registers the `ru` language with an
+This repository does exactly that for 60 UI namespaces: it registers the `ru` language with an
 `en` fallback, registers the Russian dictionaries, and removes both when the plugin unloads.
 Lookup walks the `ru → en` chain, and the host persists the language choice itself.
 See [docs/how-it-works.md](docs/how-it-works.md).
@@ -72,9 +72,12 @@ client modules in a sandbox:
 
 ```bash
 npm run verify   # the plugin works on the real dsh locale service (20 checks)
-npm run check    # coverage: 42/42 namespaces, 1257/1257 keys, 0 mismatches
+npm run check    # coverage: 60/60 namespaces, 2750/2750 keys, 0 mismatches
 npm test          # both
 ```
+
+On alpha.5, the linked plugin updated through HMR without a restart. Reload the page
+(Ctrl+Shift+R). If the server still serves the old client module, safely restart after active tasks finish.
 
 ## Limitations
 

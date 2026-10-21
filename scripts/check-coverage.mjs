@@ -53,7 +53,14 @@ for (const [namespace, locales] of Object.entries(reference)) {
 
 for (const [namespace, locales] of Object.entries(ours)) {
   for (const [key, text] of Object.entries(locales.ru ?? {})) {
-    if (String(text).trim() === '') empty.push(`${namespace}.${key}`)
+    const english = reference[namespace]?.en
+    if (!english || !(key in english)) {
+      if (!stale.includes(`${namespace}.${key}`)) stale.push(`${namespace}.${key}`)
+    }
+    // Empty prefixes and whitespace separators are intentional in dsh.
+    if (String(text).trim() === '' && (english?.[key] === undefined || String(english[key]).trim() !== '')) {
+      empty.push(`${namespace}.${key}`)
+    }
   }
 }
 
